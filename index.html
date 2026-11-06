@@ -1,0 +1,548 @@
+     
+     
+       <!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+    
+        
+<title>La Base 1</title>
+  
+<style>
+
+body{
+    margin:0;
+    overflow:hidden;
+    background:white;
+    font-family:Arial,sans-serif;
+}
+
+
+
+/* SPHERE */
+
+
+#sphere{
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100vw;
+    height:100vh;
+
+    overflow:hidden;
+}
+ 
+
+
+.sphereItem{
+    position:absolute;
+    left:50%;
+    transform:translate(-50%,-50%);
+    white-space:nowrap;
+
+}
+
+
+#openTime {
+   
+ position: fixed;
+    bottom: 2px;
+    right: 5px;
+    font-size: 4px;
+    color: white;
+    opacity: 0.7;
+
+}
+
+</style>
+</head>
+
+<body>
+
+
+<div id="sphere"></div>
+
+  
+<script>
+
+// ======================================
+// DATA
+// ======================================
+  const numbers = ["Réveillez vous chaque matin frais dispos et profondément régénéré ","Rayonnez d'une santé parfaite et d'une vitalité débordante ","Laissez chacune de vos cellules se renouveler dans l'harmonie la force et la jeunesse ","Honorez votre corps et qu'il vous le rende en étant fort et résistant","Ressentez une énergie pure et vibrante circuler en vous à chaque instant","Conservez une humeur joyeuse légère et éternellement jeune ","Gardez votre esprit vif curieux et ouvert à toutes les merveilles du monde","Traversez le temps avec la grâce la souplesse et l'enthousiasme de la jeunesse ","Libérez tout le potentiel de vie et de fraîcheur qui réside en vous","Sentez vous profondément bien serein et en parfaite harmonie avec vous mêmes ","Cultivez activement le bonheur et attirez la joie dans tout ce que vous faites ","Soyez pleinement conscients de votre valeur unique et acceptez vous sans jugement ","Laissez la paix intérieure être votre guide constant vous ancrant dans le moment présent","Commencez chaque journée avec une clarté d'esprit et un but inspirant ","Soyez habités par une motivation inébranlable pour réaliser vos rêves les plus grands ","Faites que chaque action que vous entreprenez vous rapproche avec assurance de vos objectifs ","Ayez une confiance absolue en vos compétences et en votre capacité à réussir ","Laissez les défis stimuler votre créativité et renforcer votre détermination à avancer","Endormez vous avec une facilité déconcertante et une profonde sensation de sécurité ","Que votre sommeil soit paisible continu et infiniment réparateur ","Glissez naturellement dans un sommeil profond qui régénère entièrement votre corps et votre esprit ","Permettez à votre mental de se reposer pleinement et de libérer toutes les tensions de la journée ","Réveillez vous chaque matin avec une énergie neuve le corps léger et l'esprit parfaitement clair","Aimez vous et acceptez vous pleinement exactement tels que vous êtes ","Traitez votre être avec une immense bienveillance de la douceur et un profond respect ","Reconnaissez votre valeur unique et accordez vous l'amour que vous méritez ","Chaque jour faites grandir votre estime personnelle et renforcez votre paix intérieure","Attirez des relations saines sincères et profondément épanouissantes ","Entourez votre vie d'un amour pur bienveillant et réciproque ","Communiquez avec le cœur renforçant les liens d'amour et de confiance avec vos proches ","Rayonnez d'une énergie d'amour qui inspire et réconforte tous ceux qui croisent votre chemin ","Donnez et recevez de l'amour avec une fluidité et une gratitude infinies","Rayonnez d'une beauté authentique qui émane de votre bien être intérieur ","Laissez votre visage refléter la sérénité la joie et une fraîcheur éclatante au quotidien ","Aimez profondément votre image dans le miroir et célébrez la beauté unique de votre corps ","Chaque jour faites que votre peau vos yeux et votre posture témoignent de votre vitalité et de votre jeunesse ","Portez votre beauté avec grâce simplicité et une assurance qui vous rend irrésistible","Puisez une force stable et inébranlable en restant connectés à la Terre ","Vibrez au rythme de la nature retrouvant votre équilibre et votre harmonie originelle ","Laissez chaque contact avec les éléments naturels nettoyer votre esprit et purifier vos énergies ","Marchez sur la Terre avec respect conscience et une profonde sensation d'appartenance ","Laissez l'énergie de la nature couler en vous renouvelant votre vitalité et votre fraîcheur intérieure ","Respirez l'air pur et laissez le calme des grands espaces apaiser toutes vos tensions ","Éveillez et nourrissez la beauté de votre paysage intérieur grâce à la beauté des paysages extérieurs ","Comme la nature au fil des saisons acceptez de grandir de fleurir et de vous renouveler en toute confiance"];
+  
+        
+     // ======================================
+
+const colors = [
+
+    "red",
+    "orange",
+    "yellow",
+    "green",
+    "blue",
+    "indigo",
+    "violet"
+    
+];
+
+// ======================================
+// SPHERE
+// ======================================
+
+const levelCount = 33;
+
+let sphereItems = [];
+let sequenceForward = false;
+
+
+let phase = Math.PI;
+
+
+
+let colorIndex = 0;
+let previousDirection = 1;
+
+// ======================================
+// CREATE ITEM
+// ======================================
+function nextIndex(i){
+
+    return (
+        i + 1
+    ) % numbers.length;
+}
+
+function prevIndex(i){
+
+    return (
+        i - 1 +
+        numbers.length
+    ) % numbers.length;
+}
+function createTopItem(){
+
+    let newIndex;
+
+    if(
+        sphereItems.length === 0
+    ){
+
+        // Start from the LAST text
+        newIndex =
+            numbers.length - 1;
+
+    }
+    else{
+
+        newIndex =
+            prevIndex(
+                sphereItems[0].index
+            );
+    }
+
+    sphereItems.unshift({
+
+        index:
+            newIndex,
+
+        value:
+            String(
+                numbers[newIndex]
+            ),
+
+        color:
+            colors[colorIndex],
+
+        level:
+            0
+
+    });
+
+    colorIndex =
+        (colorIndex + 1)
+        %
+        colors.length;
+
+ 
+}
+
+function createBottomStartItem(){
+
+    const newIndex = 0;
+
+    sphereItems.push({
+
+        index:
+            newIndex,
+
+        value:
+            String(
+                numbers[newIndex]
+            ),
+
+        color:
+            colors[colorIndex],
+
+        level:
+            levelCount - 1
+
+    });
+
+    colorIndex =
+        (
+            colorIndex + 1
+        )
+        %
+        colors.length;
+}
+// ======================================
+// DRAW
+// ======================================
+
+
+
+function drawSphere(){
+
+    const sphere =
+        document.getElementById(
+            "sphere"
+        );
+
+    sphere.innerHTML = "";
+
+   
+    sphereItems.forEach(item => {
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+        div.className =
+            "sphereItem";
+
+        div.innerText =
+            item.value;
+
+        div.style.color =
+            item.color;
+
+      
+const lineHeight = 36;
+
+const y =
+     -10 +
+ item.level * lineHeight;
+
+
+        div.style.top =
+            y + "px";
+
+        div.style.left =
+            "50%";
+
+        div.style.transform =
+            "translate(-50%,-50%)";
+
+        const length =
+            String(
+                item.value
+            ).length;
+
+        const fontSize =
+            Math.max(
+              
+           
+
+  18,
+        36 - length * 0.5
+
+
+            );
+
+      div.style.fontSize = "24px";
+// div.style.fontSize =
+ //           fontSize + "px";
+       sphere.appendChild(div);
+
+    });
+}
+
+
+
+// ======================================
+// MOVEMENT
+// ======================================
+
+
+function moveForward(step){
+
+    sphereItems.forEach(item=>{
+        item.level += step;
+    });
+
+    sphereItems =
+        sphereItems.filter(
+            item => item.level < levelCount
+        );
+
+    if(
+        sphereItems.length === 0 ||
+        sphereItems[0].level >= 1
+    ){
+        createTopItem();
+    }
+}
+
+  
+function moveBackward(step){
+
+    sphereItems.forEach(item=>{
+        item.level -= step;
+    });
+
+    sphereItems =
+        sphereItems.filter(
+            item => item.level >= 0
+        );
+
+    if(
+        sphereItems.length === 0 ||
+        sphereItems[sphereItems.length-1].level <= levelCount-2
+    ){
+
+      
+colorIndex =
+    (
+        colorIndex - 1 +
+        colors.length
+    )
+    %
+    colors.length;
+
+
+const newIndex =
+
+    sphereItems.length === 0
+    ? numbers.length - 1
+    : nextIndex(
+        sphereItems[
+            sphereItems.length - 1
+        ].index
+    );
+
+sphereItems.push({
+
+    index:
+        newIndex,
+
+    value:
+        String(
+            numbers[newIndex]
+        ),
+
+    color:
+        colors[colorIndex],
+
+    level:
+        levelCount - 1
+
+});
+
+    }
+}
+
+// ======================================
+// SINUSOID
+// ======================================
+
+let previousTimestamp = null;
+
+function loop(timestamp){
+
+    if(previousTimestamp === null){
+        previousTimestamp = timestamp;
+    }
+
+    // Real elapsed time in seconds
+    let deltaTime =
+        (timestamp - previousTimestamp) / 1000;
+
+    previousTimestamp = timestamp;
+
+    // Prevent a huge jump if the browser stalls
+    deltaTime =
+        Math.min(deltaTime, 0.05);
+
+
+const cycleDuration =  177.6043360433;
+
+
+
+    // Completely time-based sinusoid
+    //
+    // Math.PI / cycleDuration means:
+    // one half-wave in cycleDuration seconds
+    // one complete sine cycle in 2 * cycleDuration seconds
+
+    phase +=
+  1.38753387 * Math.PI        
+  /
+       (cycleDuration * 60);
+
+
+    const wave =
+        Math.sin(phase);
+  
+
+    const direction =
+        wave >= 0
+        ? 1
+        : -1;
+
+
+    const speed =
+        Math.abs(wave);
+
+
+const minInterval = 173.441734417344; 
+const maxInterval = 346.883468834688;
+const movementScale = 2775.0677506774;
+    const equivalentInterval =
+        maxInterval -
+        speed *
+        (
+            maxInterval -
+            minInterval
+        );
+
+
+    // ==========================================
+    // REAL-TIME MOVEMENT
+    // ==========================================
+
+    // Original calibration was:
+    //
+    // 30 / equivalentInterval per frame
+    //
+    // At 60 FPS this corresponds to:
+    //
+    // (30 / equivalentInterval) * 60
+    // levels per second.
+
+  const movementSpeed =
+    movementScale /
+    equivalentInterval;
+
+const step =
+   44.40108401084 / equivalentInterval;
+
+
+    if(direction > 0){
+
+        moveForward(step);
+
+    }
+    else{
+
+        moveBackward(step);
+
+    }
+
+
+    drawSphere();
+
+
+    requestAnimationFrame(
+        loop
+    );
+}
+// ======================================
+// FULLSCREEN
+// ======================================
+
+function enterFullscreen(){
+
+    if(
+      !document.fullscreenElement
+    ){
+
+        document
+        .documentElement
+        .requestFullscreen()
+        .catch(()=>{});
+    }
+}
+
+document.addEventListener(
+    "click",
+    enterFullscreen,
+    {once:true}
+);
+
+document.addEventListener(
+    "touchstart",
+    enterFullscreen,
+    {once:true}
+);
+
+// ======================================
+// START
+// ======================================
+
+window.addEventListener(
+    "load",
+    ()=>{
+keepScreenAwake();
+
+  //const openedAt = new Date();
+   // document.getElementById("openTime").textContent =
+      // openedAt.toLocaleString();    
+
+
+
+createBottomStartItem();
+drawSphere();
+
+        requestAnimationFrame(
+            loop
+        );
+    }
+);
+      
+let wakeLock = null;
+
+async function keepScreenAwake() {
+    try {
+        wakeLock = await navigator.wakeLock.request("screen");
+
+        wakeLock.addEventListener("release", () => {
+            console.log("Wake Lock released");
+        });
+
+        console.log("Screen Wake Lock active");
+
+    } catch (err) {
+        console.log("Wake Lock error:", err);
+    }
+}
+
+document.addEventListener("visibilitychange", async () => {
+
+    if (
+        wakeLock !== null &&
+        document.visibilityState === "visible"
+    ) {
+        await keepScreenAwake();
+    }
+
+});
+
+</script>
+
+</body>
+</html>      
